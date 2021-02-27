@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Put your settings here
+
 INDISERVER=localhost
 RRDDIR=/home/seb/observatory/rrd
 IMGDIR=/var/www/html/observatory/images
@@ -8,9 +9,11 @@ RRDFILE=$RRDDIR/aagcloud.rrd
 HEARTBEAT=1200
 
 COLORS="-c BACK#000000 -c CANVAS#000000 --color FONT#FF0000 --color SHADEA#000000 --color SHADEB#000000"
+IMGPROPS="-w 640 -h 320 -a PNG"
 
 
-# Creation of the rrd database
+
+# Creation of the rrd database if it does not exists
 if [ ! -f $RRDFILE ]; then
 rrdtool create $RRDFILE \
         DS:sky:GAUGE:$HEARTBEAT:-30:50 \
@@ -33,7 +36,7 @@ temp=$(indi_getprop -h $INDISERVER -t 10 -1 AAG\ Cloud\ Watcher.sensors.ambientT
 wind=$(indi_getprop -h $INDISERVER -t 10 -1 AAG\ Cloud\ Watcher.readings.windSpeed)
 
 
-# A usefulel list of AAG Cloud attribute for the limits
+# A usefull list of AAG Cloud attribute for the limits. Below are the default values.
 # AAG Cloud Watcher.limitsCloud.clear=-5
 # AAG Cloud Watcher.limitsCloud.cloudy=0
 # AAG Cloud Watcher.limitsCloud.overcast=30
@@ -44,25 +47,27 @@ wind=$(indi_getprop -h $INDISERVER -t 10 -1 AAG\ Cloud\ Watcher.readings.windSpe
 # AAG Cloud Watcher.limitsBrightness.light=100
 # AAG Cloud Watcher.limitsBrightness.veryLight=0
 
-# WWe have to check if the device is connected. In not we proceed to the connection...
+# We have to check if the device is connected. In not we proceed to the connection...
+# We assume that the indi sever is allready running.
 constatus=$(indi_getprop -t 5 -1 AAG\ Cloud\ Watcher.CONNECTION.CONNECT)
 if [ $constatus == "Off" ]; then
     # Not connected. Enable connection..."
     indi_setprop -h $INDISERVER -t 5 AAG\ Cloud\ Watcher.CONNECTION.CONNECT=On
 fi 
 
-# Compute the cloud coever percentage
+
+# Compute the cloud cover percentage
 cloudCover=100
 # Above 0 is overcast
 # Between -5 and 0 is cloudy
-# Bellow -5 is clear
+# Below -5 is clear
 if [ $(echo "$irsky>0" | bc) == 1 ] ; then cloudCover=100; else if [ $(echo "$irsky<=-5" | bc ) == 1 ]; then cloudCover=0; else cloudCover=$(echo "scale=5;($irsky + 5)/( 5 + 0)*100" | bc); fi; fi; echo $cloudCover;
 
 # Compute the humidity percentage
 humidity=100
 # Above 2000 is dry
 # Between 2000 and 1700 is wet
-# Bellow 1700 is rainy 
+# Below 1700 is rainy 
 if [ $(echo "$rain>2000" | bc) == 1 ] ; then humidity=0; else if [ $(echo "$rain<1700" | bc ) == 1 ]; then humidity=100; else humidity=$(echo "scale=5;($rain - 1700)/(2000-1700)*100" | bc); fi; fi; echo $humidity;
 
 #compute the light percentage
@@ -78,16 +83,16 @@ sleep 2
 
 ######################################################################################
 #
-# Now that the  rrd update is done, we can proceed to the graph creation
+# Now that the  rrd update is done, we can proceed to the graphs creation
 #
 ######################################################################################
 
 
-
-# Cloud cover graph
+# Cloud cover percentage graph
+# =============================
 
 rrdtool graph $IMGDIR/aagcloud-cloudcover-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            -u 102 -l -2 -r \
@@ -101,7 +106,7 @@ rrdtool graph $IMGDIR/aagcloud-cloudcover-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-cloudcover-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -86400 --end now \
            -u 102 -l -2 -r \
@@ -115,9 +120,10 @@ rrdtool graph $IMGDIR/aagcloud-cloudcover-lastday.png \
 
 
 # humidity cover graph
+# ====================
 
 rrdtool graph $IMGDIR/aagcloud-humidity-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            -u 105 -l -5 -r \
@@ -132,7 +138,7 @@ rrdtool graph $IMGDIR/aagcloud-humidity-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-humidity-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            -c BACK#000000 -c CANVAS#000000 --color FONT#FF0000 --color SHADEA#000000 --color SHADEB#000000 \
            --start -86400 --end now \
@@ -149,9 +155,10 @@ rrdtool graph $IMGDIR/aagcloud-humidity-lastday.png \
 
 
 # Light graph 
+# ===========
 
 rrdtool graph $IMGDIR/aagcloud-light-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            -u 102 -l -2 -r \
@@ -164,7 +171,7 @@ rrdtool graph $IMGDIR/aagcloud-light-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-light-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -86400 --end now \
            -u 102 -l -2 -r \
@@ -177,11 +184,15 @@ rrdtool graph $IMGDIR/aagcloud-light-lastday.png \
 
 
 # #########################################################################
-# Create graph for last 3 hours
+# Now Create for the raw data form the AAG Cloud Watcher
 ##########################################################################
 
+
+# Create raw data graphs for last 3 hours
+# =======================================
+
 rrdtool graph $IMGDIR/aagcloud-all-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            --vertical-label "All Sensors data" \
@@ -192,7 +203,7 @@ rrdtool graph $IMGDIR/aagcloud-all-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-temp-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            -u 50 -l -20 -r \
@@ -203,7 +214,7 @@ rrdtool graph $IMGDIR/aagcloud-temp-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-rain-lasthour.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -10800 --end now \
            -u 3000 -l -2 -r \
@@ -216,7 +227,7 @@ rrdtool graph $IMGDIR/aagcloud-rain-lasthour.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-sky-lasthour.png \
-        -w 640 -h 320 -a PNG --slope-mode \
+        $IMGPROPS --slope-mode \
         $COLORS \
         --start -10800 --end now \
         -u 30 -l -20 -r \
@@ -228,9 +239,11 @@ rrdtool graph $IMGDIR/aagcloud-sky-lasthour.png \
         HRULE:30#FF0000AA:"Limit overcast"  > /dev/null 2>&1
 
 
-# Create graph for last 24 hours
+# Create raw data graphs for last 24 hours
+#=========================================
+
 rrdtool graph $IMGDIR/aagcloud-all-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -86400 --end now \
            --vertical-label "All Sensors data" \
@@ -241,7 +254,7 @@ rrdtool graph $IMGDIR/aagcloud-all-lastday.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-temp-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -86400 --end now \
            -u 50 -l -20 -r \
@@ -252,7 +265,7 @@ rrdtool graph $IMGDIR/aagcloud-temp-lastday.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-rain-lastday.png \
-           -w 640 -h 320 -a PNG --slope-mode \
+           $IMGPROPS --slope-mode \
            $COLORS \
            --start -86400 --end now \
            -u 3000 -l -2 -r \
@@ -265,7 +278,7 @@ rrdtool graph $IMGDIR/aagcloud-rain-lastday.png \
 
 
 rrdtool graph $IMGDIR/aagcloud-sky-lastday.png \
-    -w 640 -h 320 -a PNG --slope-mode \
+    $IMGPROPS --slope-mode \
     $COLORS \
     --start -86400 --end now \
     -u 30 -l -20 -r \
@@ -277,7 +290,7 @@ rrdtool graph $IMGDIR/aagcloud-sky-lastday.png \
     HRULE:30#FF0000AA:"Limit overcast"  > /dev/null 2>&1
 
 
-# All usefull sensoR data
+# All usefull sensor data
 #
 # AAG Cloud Watcher.sensors.infraredSky=-2.1400001049041748047
 # AAG Cloud Watcher.sensors.correctedInfraredSky=-8.1169500350952148438
