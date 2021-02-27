@@ -16,6 +16,9 @@ RRDDIR=$BASEDIR/rrd
 RRDFILE=$RRDDIR/aagcloud.rrd
 HEARTBEAT=1200
 
+# System http server base html directory. It may depend on the distribution or http server.
+SYSHTMLDIR=/var/www/html
+
 # RRD Graph colors and image size
 COLORS="-c BACK#000000 -c CANVAS#000000 --color FONT#FF0000 --color SHADEA#000000 --color SHADEB#000000"
 IMGPROPS="-w 640 -h 320 -a PNG"

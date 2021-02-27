@@ -5,8 +5,8 @@
 if [ ! -e /etc/observatory/config ]; then
     source /etc/observatory/config
 else
-# Else put your settings here
 
+# ...else put your settings here
 INDISERVER=localhost
 RRDDIR=/home/seb/observatory/rrd
 IMGDIR=/var/www/html/observatory/images
@@ -21,6 +21,7 @@ fi
 
 # Creation of the rrd database if it does not exists
 if [ ! -f $RRDFILE ]; then
+echo "Create RRD database $RRDFILE..."
 rrdtool create $RRDFILE \
         DS:sky:GAUGE:$HEARTBEAT:-30:50 \
         DS:rain:GAUGE:$HEARTBEAT:U:U \
