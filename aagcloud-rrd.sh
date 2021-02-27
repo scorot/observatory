@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# Put your settings here
+
+# check if the config file exists....
+if [ ! -e /etc/observatory/config ]; then
+    source /etc/observatory/config
+else
+# Else put your settings here
 
 INDISERVER=localhost
 RRDDIR=/home/seb/observatory/rrd
@@ -11,6 +16,7 @@ HEARTBEAT=1200
 COLORS="-c BACK#000000 -c CANVAS#000000 --color FONT#FF0000 --color SHADEA#000000 --color SHADEB#000000"
 IMGPROPS="-w 640 -h 320 -a PNG"
 
+fi
 
 
 # Creation of the rrd database if it does not exists
