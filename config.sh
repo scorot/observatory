@@ -2,6 +2,7 @@
 
 
 # Indi server host name
+# Ensure the server is already running on this host. 
 INDISERVER=localhost
 
 # Base install directory. Default to /home/user/observatory
