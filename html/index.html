@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
+    <meta charset="utf-8">
+    <title>Observatory Weather Status</title>
+</head>
+<body>
+    <h1>Weather status and forecast</h1>
+<!--
+    <iframe src="https://www.meteoblue.com/fr/meteo/widget/three/andolsheim_france_3037706?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=monochrome"  frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 460px; height: 594px"></iframe><div><a href="https://www.meteoblue.com/fr/meteo/semaine/andolsheim_france_3037706?utm_source=weather_widget&utm_medium=linkus&utm_content=three&utm_campaign=Weather%2BWidget" target="_blank">meteoblue</a></div>
+    <div id="openweathermap-widget-21"></div>
+-->
+
+<!--
+    <script src='//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/d3.min.js'></script><script>window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({id: 21,cityid: '3037706',appid: 'acedc4a8b2c84142111400e2ea8ab95f',units: 'metric',containerid: 'openweathermap-widget-21',  });  (function() {var script = document.createElement('script');script.async = true;script.charset = "utf-8";script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(script, s);  })();</script>
+    <p style="clear: both;">
+-->
+	<a class="weatherwidget-io" href="https://forecast7.com/fr/48d067d42/andolsheim/" data-label_1="ANDOLSHEIM" data-label_2="WEATHER" data-theme="dark" >ANDOLSHEIM WEATHER</a>
+	<script>
+	!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+	</script>
+    <p style="clear: both;">
+
+    <h1>Sky camera and satelite view</h1>
+    <div class="row">
+		 <div class="column">
+		 	<a href="http://allsky/allsky/index.php">
+				<img src="http://allsky/current/tmp/image-resize.jpg" alt="Picture not found" style="width:100%">
+			</a>
+		 </div>
+		 <div class="column">
+			<a href="http://fr.sat24.com/fr" target='sat24'>
+				<img src="https://api.sat24.com/animated/FR/infraPolair/2/Romance%20Standard%20Time/6127960" style="width:100%">
+			</a>
+		 </div>
+	</div>
+    <h1>Weather and sky data graph</h1>
+    <p>Sky conditions last 3 hours</p>
+    <div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-cloudcover-lasthour.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-humidity-lasthour.png" style="width:100%">
+		 </div>
+	</div>
+	<div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-light-lasthour.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/temp-and-dewpoint-lasthour.png" style="width:100%">
+		 </div>
+	</div>
+    <p>Sky conditions last 24 hours</p>
+    <div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-cloudcover-lastday.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-humidity-lastday.png" style="width:100%">
+		 </div>
+	</div>
+	<div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-light-lastday.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/temp-and-dewpoint-lastday.png" style="width:100%">
+		 </div>
+	</div>	
+    <p>All sensors data collected last 3 hours</p>
+    <div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-sky-lasthour.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-rain-lasthour.png" style="width:100%">
+		 </div>
+	</div>
+	<div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-temp-lasthour.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-all-lasthour.png" style="width:100%">
+		 </div>
+	</div>
+    <p>All data collected last 24 hours</p>
+    <div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-sky-lastday.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-rain-lastday.png" style="width:100%">
+		 </div>
+	</div>
+	<div class="row">
+		 <div class="column">
+			<img src="images/aagcloud-temp-lastday.png" style="width:100%">
+		 </div>
+		 <div class="column">
+			<img src="images/aagcloud-all-lastday.png" style="width:100%">
+		 </div>
+	</div>
+</body>
+<style>
+.aligncenter {
+    text-align: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+  float: left;
+  width: 50%;
+  padding: 5px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+} 
+</style>
+</html>

@@ -1,0 +1,14 @@
+[Unit]
+Description=Anemometer service
+After=network-online.target
+ 
+[Service]
+ExecStart=python /home/pi/observatory/anemometer/anemometer_observatory.py
+WorkingDirectory=/home/pi/observatory/anemometer/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+ 
+[Install]
+WantedBy=multi-user.target
