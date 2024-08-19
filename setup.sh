@@ -18,7 +18,8 @@ mkdir -p $IMGDIR && chown $USER.$USER $RRDDIR
 
 
 install -m644 style.css $HTMLDIR/style.css
-install -m644 index.html $HTMLDIR/index.html
+install -m644 index.php $HTMLDIR/index.php
+install -m755 status.php $HTMLDIR/status.php
 
 # This works with the nginx http server from ubuntu mate and RaspberryPi OS
 # on the raspberrypi
