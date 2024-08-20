@@ -10,4 +10,11 @@ BASEDIR=$(dirname $0)
 . $BASEDIR/conf.d/private.env
 
 # Send the magick paquet for wol
+echo "Send magick paquet to $NUC_MAC ..."
 sudo etherwake -i eth0 $NUC_MAC
+
+if [ $? -eq 0 ]; then
+    echo "Magick paquet send successfully."
+else
+    echo "Error when send magick packet."
+fi
