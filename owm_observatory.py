@@ -19,7 +19,7 @@ config = dotenv_values(conf_dir)
 lat = config.get('LAT')
 lon = config.get('LON')
 apikey = config.get('OWM_API_KEY')
-url = 'http://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&appid={}'.format(lat, lon, apikey)
+url = 'https://api.openweathermap.org/data/3.0/onecall?lat={}&lon={}&appid={}'.format(lat, lon, apikey)
 
 weburl = urllib.request.urlopen(url)
 data = weburl.read()
